@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Filter & Sort Product List</title>
+
+  <style>
+    body {
+      font-family: "Segoe UI", Arial, sans-serif;
+      background: #f4f6f8;
+      padding: 30px;
+      margin: 0;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .controls {
+      max-width: 700px;
+      margin: 0 auto 20px;
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+    }
+
+    select {
+      padding: 8px 12px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 14px;
+    }
+
+    .products {
+      max-width: 700px;
+      margin: auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+    }
+
+    .card {
+      background: white;
+      padding: 15px;
+      border-radius: 10px;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+    }
+
+    .card h4 {
+      margin: 0 0 5px;
+    }
+
+    .category {
+      font-size: 12px;
+      color: #6b7280;
+    }
+
+    .price {
+      margin-top: 8px;
+      font-weight: bold;
+      color: #2563eb;
+    }
+  </style>
+</head>
+<body>
+
+<h2>Product List</h2>
+
+<div class="controls">
+  <select id="categoryFilter">
+    <option value="all">All Categories</option>
+    <option value="electronics">Electronics</option>
+    <option value="clothing">Clothing</option>
+    <option value="food">Food</option>
+  </select>
+
+  <select id="sortPrice">
+    <option value="default">Sort by Price</option>
+    <option value="low">Low to High</option>
+    <option value="high">High to Low</option>
+  </select>
+</div>
+
+<div class="products" id="productList"></div>
+
+<script>
+  const products = [
+    { name: "Laptop", category: "electronics", price: 45000 },
+    { name: "Headphones", category: "electronics", price: 2500 },
+    { name: "T-Shirt", category: "clothing", price: 800 },
+    { name: "Jacket", category: "clothing", price: 3200 },
+    { name: "Chocolate", category: "food", price: 150 },
+    { name: "Coffee", category: "food", price: 280 }
+  ];
+
+  const categoryFilter = document.getElementById("categoryFilter");
+  const sortPrice = document.getElementById("sortPrice");
+  const productList = document.getElementById("productList");
+
+  function renderProducts(list) {
+    productList.innerHTML = "";
+
+    list.forEach(product => {
+      productList.innerHTML += `
+        <div class="card">
+          <h4>${product.name}</h4>
+          <div class="category">${product.category}</div>
+          <div class="price">₱${product.price}</div>
+        </div>
+      `;
+    });
+  }
+
+  function updateProducts() {
+    let filteredProducts = [...products];
+
+    // Filter by category
+    const selectedCategory = categoryFilter.value;
+    if (selectedCategory !== "all") {
+      filteredProducts = filteredProducts.filter(
+        p => p.category === selectedCategory
+      );
+    }
+
+    // Sort by price
+    const sortValue = sortPrice.value;
+    if (sortValue === "low") {
+      filteredProducts.sort((a, b) => a.price - b.price);
+    } else if (sortValue === "high") {
+      filteredProducts.sort((a, b) => b.price - a.price);
+    }
+
+    renderProducts(filteredProducts);
+  }
+
+  categoryFilter.addEventListener("change", updateProducts);
+  sortPrice.addEventListener("change", updateProducts);
+
+  // Initial load
+  renderProducts(products);
+</script>
+
+</body>
+</html>
