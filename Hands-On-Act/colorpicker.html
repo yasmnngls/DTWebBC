@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Complete Color Picker</title>
+
+<style>
+  * { box-sizing: border-box; }
+
+  body {
+    font-family: "Segoe UI", Arial, sans-serif;
+    background: linear-gradient(135deg, #eef2f7, #dce3ff);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+  }
+
+  .card {
+    background: #fff;
+    padding: 25px;
+    width: 320px;
+    border-radius: 15px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+    text-align: center;
+  }
+
+  h2 {
+    margin-bottom: 10px;
+  }
+
+  input[type="color"] {
+    width: 100%;
+    height: 55px;
+    border: none;
+    cursor: pointer;
+    border-radius: 8px;
+  }
+
+  .preview {
+    margin-top: 15px;
+    height: 120px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    transition: 0.3s;
+  }
+
+  .codes {
+    margin-top: 10px;
+    font-size: 14px;
+  }
+
+  .codes div {
+    margin: 4px 0;
+  }
+
+  button {
+    margin-top: 10px;
+    width: 100%;
+    padding: 8px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    background: #4a7bff;
+    color: white;
+    font-weight: bold;
+  }
+
+  button:hover {
+    background: #345cff;
+  }
+
+  .history {
+    display: flex;
+    gap: 6px;
+    margin-top: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .color-dot {
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 2px solid #fff;
+    box-shadow: 0 0 4px rgba(0,0,0,0.3);
+  }
+</style>
+</head>
+
+<body>
+
+<div class="card">
+  <h2>Complete Color Picker</h2>
+
+  <input type="color" id="picker">
+
+  <div class="preview" id="preview">
+    #000000
+  </div>
+
+  <div class="codes">
+    <div id="hexCode">HEX: #000000</div>
+    <div id="rgbCode">RGB: rgb(0, 0, 0)</div>
+  </div>
+
+  <button onclick="copyColor()">Copy HEX</button>
+
+  <div class="history" id="history"></div>
+</div>
+
+<script>
+  const picker = document.getElementById("picker");
+  const preview = document.getElementById("preview");
+  const hexCode = document.getElementById("hexCode");
+  const rgbCode = document.getElementById("rgbCode");
+  const history = document.getElementById("history");
+
+  let recentColors = [];
+
+  picker.addEventListener("input", () => {
+    updateColor(picker.value);
+  });
+
+  function updateColor(color) {
+    preview.style.background = color;
+    preview.textContent = color;
+    hexCode.textContent = `HEX: ${color}`;
+
+    const rgb = hexToRgb(color);
+    rgbCode.textContent = `RGB: rgb(${rgb.r}, ${rgb.g}, ${rgb.b})`;
+
+    preview.style.color = getContrastColor(rgb);
+    addToHistory(color);
+  }
+
+  function hexToRgb(hex) {
+    const bigint = parseInt(hex.slice(1), 16);
+    return {
+      r: (bigint >> 16) & 255,
+      g: (bigint >> 8) & 255,
+      b: bigint & 255
+    };
+  }
+
+  function getContrastColor({ r, g, b }) {
+    const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+    return brightness > 125 ? "#000" : "#fff";
+  }
+
+  function copyColor() {
+    navigator.clipboard.writeText(picker.value);
+    alert("HEX color copied!");
+  }
+
+  function addToHistory(color) {
+    if (recentColors.includes(color)) return;
+
+    recentColors.unshift(color);
+    if (recentColors.length > 5) recentColors.pop();
+
+    history.innerHTML = "";
+    recentColors.forEach(c => {
+      const dot = document.createElement("div");
+      dot.className = "color-dot";
+      dot.style.background = c;
+      dot.onclick = () => updateColor(c);
+      history.appendChild(dot);
+    });
+  }
+</script>
+
+</body>
+</html>
