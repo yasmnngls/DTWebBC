@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Number Search Game</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f8;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            background: #ffffff;
+            padding: 25px;
+            width: 350px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+            text-align: center;
+        }
+
+        h2 {
+            margin-bottom: 15px;
+        }
+
+        input {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            background-color: #007bff;
+            color: white;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .result {
+            margin-top: 15px;
+            font-weight: bold;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Number Search Game</h2>
+
+    <p>Search for a number in the array:</p>
+    <p><strong>[10, 25, 30, 45, 50, 75, 100]</strong></p>
+
+    <input type="number" id="userInput" placeholder="Enter a number">
+
+    <button onclick="searchNumber()">Search</button>
+
+    <div class="result" id="result"></div>
+</div>
+
+<script>
+    // Provided data structure (array)
+    const numbers = [10, 25, 30, 45, 50, 75, 100];
+
+    function searchNumber() {
+        const input = document.getElementById("userInput").value;
+        const result = document.getElementById("result");
+
+        if (input === "") {
+            result.innerText = "Please enter a number.";
+            return;
+        }
+
+        const number = Number(input);
+        const index = numbers.indexOf(number);
+
+        if (index !== -1) {
+            result.innerText = `✅ Data located at index ${index}`;
+        } else {
+            result.innerText = "❌ Data is not in your array";
+        }
+    }
+</script>   
+
+</body>
+</html>
