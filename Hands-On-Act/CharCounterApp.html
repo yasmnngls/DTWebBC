@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Character Counter Application</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: "Segoe UI", Tahoma, sans-serif;
+      background: linear-gradient(135deg, #eef2f7, #dbeafe);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .card {
+      background: #ffffff;
+      width: 400px;
+      padding: 25px;
+      border-radius: 16px;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.15);
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 10px;
+      color: #1f2937;
+    }
+
+    textarea {
+      width: 100%;
+      height: 140px;
+      padding: 12px;
+      font-size: 14px;
+      border-radius: 10px;
+      border: 1px solid #cbd5e1;
+      resize: none;
+    }
+
+    textarea:focus {
+      outline: none;
+      border-color: #4a7bff;
+      box-shadow: 0 0 0 2px rgba(74,123,255,0.2);
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      text-align: center;
+      margin-top: 10px;
+      font-size: 14px;
+    }
+
+    .stats span {
+      font-weight: bold;
+      font-size: 16px;
+    }
+
+    .progress {
+      height: 10px;
+      background: #e5e7eb;
+      border-radius: 6px;
+      overflow: hidden;
+      margin-top: 10px;
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      background: #22c55e;
+      transition: width 0.2s, background 0.2s;
+    }
+
+    .warning {
+      background: #ef4444 !important;
+    }
+
+    .buttons {
+      display: flex;
+      gap: 10px;
+      margin-top: 15px;
+    }
+
+    button {
+      flex: 1;
+      padding: 10px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: 0.2s;
+    }
+
+    .copy {
+      background: #4a7bff;
+      color: white;
+    }
+
+    .copy:hover {
+      background: #345cff;
+    }
+
+    .clear {
+      background: #ef4444;
+      color: white;
+    }
+
+    .clear:hover {
+      background: #dc2626;
+    }
+  </style>
+</head>
+<body>
+
+<div class="card">
+  <h2>Character Counter</h2>
+
+  <textarea id="textInput" placeholder="Start typing here..."></textarea>
+
+  <div class="stats">
+    <div>Chars<br><span id="charCount">0</span></div>
+    <div>Words<br><span id="wordCount">0</span></div>
+    <div>Remaining<br><span id="remaining">200</span></div>
+  </div>
+
+  <div class="progress">
+    <div class="progress-bar" id="progressBar"></div>
+  </div>
+
+  <div class="buttons">
+    <button class="copy" onclick="copyText()">Copy</button>
+    <button class="clear" onclick="clearText()">Clear</button>
+  </div>
+</div>
+
+<script>
+  const textInput = document.getElementById("textInput");
+  const charCount = document.getElementById("charCount");
+  const wordCount = document.getElementById("wordCount");
+  const remaining = document.getElementById("remaining");
+  const progressBar = document.getElementById("progressBar");
+
+  const LIMIT = 200;
+
+  textInput.addEventListener("input", () => {
+    let text = textInput.value;
+
+    if (text.length > LIMIT) {
+      text = text.slice(0, LIMIT);
+      textInput.value = text;
+    }
+
+    const chars = text.length;
+    const words = text.trim() === "" ? 0 : text.trim().split(/\s+/).length;
+
+    charCount.textContent = chars;
+    wordCount.textContent = words;
+    remaining.textContent = LIMIT - chars;
+
+    const percentage = (chars / LIMIT) * 100;
+    progressBar.style.width = percentage + "%";
+
+    progressBar.classList.toggle("warning", chars > LIMIT * 0.8);
+  });
+
+  function copyText() {
+    navigator.clipboard.writeText(textInput.value);
+    alert("Text copied to clipboard!");
+  }
+
+  function clearText() {
+    textInput.value = "";
+    charCount.textContent = "0";
+    wordCount.textContent = "0";
+    remaining.textContent = LIMIT;
+    progressBar.style.width = "0%";
+    progressBar.classList.remove("warning");
+  }
+</script>
+
+</body>
+</html>
