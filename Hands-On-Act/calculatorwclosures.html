@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Calculator with Counter & Closures</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: "Segoe UI", Tahoma, sans-serif;
+      background: radial-gradient(circle at top, #1f1f2e, #0d0d14);
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .calculator {
+      background: rgba(25, 25, 40, 0.95);
+      border-radius: 18px;
+      padding: 20px;
+      width: 320px;
+      box-shadow: 0 15px 40px rgba(0,0,0,0.6);
+    }
+
+    .title {
+      text-align: center;
+      font-weight: 600;
+      margin-bottom: 10px;
+      color: #a9bfff;
+    }
+
+    input {
+      width: 100%;
+      padding: 16px;
+      font-size: 1.4em;
+      border: none;
+      border-radius: 12px;
+      text-align: right;
+      margin-bottom: 15px;
+      background: #0f172a;
+      color: #22ff88;
+      box-shadow: inset 0 0 8px rgba(34,255,136,0.25);
+    }
+
+    .buttons {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+    }
+
+    button {
+      padding: 15px;
+      font-size: 1.1em;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      background: linear-gradient(145deg, #2a2d45, #1c1f33);
+      color: #fff;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+      transition: all 0.15s ease;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+      background: linear-gradient(145deg, #3b3f66, #262a44);
+    }
+
+    button:active {
+      transform: scale(0.95);
+    }
+
+    .operator {
+      color: #ffd166;
+    }
+
+    .equal {
+      background: linear-gradient(145deg, #22c55e, #16a34a);
+      color: #042f1a;
+      font-weight: bold;
+    }
+
+    .equal:hover {
+      background: linear-gradient(145deg, #4ade80, #22c55e);
+    }
+
+    .danger {
+      background: linear-gradient(145deg, #ef4444, #b91c1c);
+      color: white;
+    }
+
+    .counter {
+      margin-top: 15px;
+      text-align: center;
+      font-size: 0.95em;
+      color: #7dd3fc;
+      opacity: 0.9;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="calculator">
+  <div class="title">Calculator · Closure Counter</div>
+
+  <input type="text" id="display" readonly />
+
+  <div class="buttons">
+    <button onclick="append('7')">7</button>
+    <button onclick="append('8')">8</button>
+    <button onclick="append('9')">9</button>
+    <button class="operator" onclick="append('/')">÷</button>
+
+    <button onclick="append('4')">4</button>
+    <button onclick="append('5')">5</button>
+    <button onclick="append('6')">6</button>
+    <button class="operator" onclick="append('*')">×</button>
+
+    <button onclick="append('1')">1</button>
+    <button onclick="append('2')">2</button>
+    <button onclick="append('3')">3</button>
+    <button class="operator" onclick="append('-')">−</button>
+
+    <button onclick="append('0')">0</button>
+    <button onclick="append('.')">.</button>
+    <button class="equal" onclick="calculate()">=</button>
+    <button class="operator" onclick="append('+')">+</button>
+
+    <button class="operator" onclick="append('%')">%</button>
+    <button class="operator" onclick="append('**')">^</button>
+    <button class="danger" onclick="clearDisplay()">C</button>
+    <button class="danger" onclick="deleteLast()">DEL</button>
+  </div>
+
+  <div class="counter" id="counter">
+    Calculations: 0
+  </div>
+</div>
+
+<script>
+  // 🔒 Closure-based Counter
+  const counter = (() => {
+    let count = 0;
+    return {
+      increment: () => ++count,
+      getCount: () => count
+    };
+  })();
+
+  const display = document.getElementById("display");
+  const counterDisplay = document.getElementById("counter");
+
+  function append(value) {
+    display.value += value;
+  }
+
+  function clearDisplay() {
+    display.value = "";
+  }
+
+  function deleteLast() {
+    display.value = display.value.slice(0, -1);
+  }
+
+  function calculate() {
+    try {
+      const result = eval(display.value);
+      display.value = result;
+
+      const total = counter.increment();
+      counterDisplay.textContent = `Calculations: ${total}`;
+    } catch {
+      display.value = "Error";
+    }
+  }
+</script>   
+
+</body>
+</html>
