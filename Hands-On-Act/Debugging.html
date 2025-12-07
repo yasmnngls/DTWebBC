@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Fixed Calculator</title>
+</head>
+<body>
+  <h2>Simple Calculator</h2>
+  
+  <!-- Added type="number" so inputs are treated as numbers instead of strings -->
+  <input id="num1" type="number" placeholder="Enter first number">
+  <input id="num2" type="number" placeholder="Enter second number">
+  
+  <select id="operator">
+    <option value="+">+</option>
+    <option value="-">-</option>
+    <option value="*">*</option>
+    <option value="/">/</option>
+  </select>
+  
+  <button onclick="calculate()">Calculate</button>
+  <p id="result"></p>
+
+  <script>
+    function calculate() {
+      /*
+        FIX 1:
+        The method name getElementByID was incorrect.
+        JavaScript is case-sensitive, so it must be getElementById.
+        Values are wrapped with Number() to ensure numeric operations.
+      */
+      const num1 = Number(document.getElementById("num1").value);
+      const num2 = Number(document.getElementById("num2").value);
+      const operator = document.getElementById("operator").value;
+
+      let result;
+
+      try {
+        /*
+          FIX 2:
+          Input validation now uses isNaN to check for invalid numbers
+          instead of checking for empty strings only.
+        */
+        if (isNaN(num1) || isNaN(num2)) {
+          throw new Error("Please enter valid numbers");
+        }
+
+        /*
+          FIX 3:
+          Replaced assignment operator (=) with comparison operator (===)
+          to correctly evaluate the selected operator.
+        */
+        if (operator === "+") {
+          result = num1 + num2;
+        } else if (operator === "-") {
+          result = num1 - num2;
+        } else if (operator === "*") {
+          result = num1 * num2;
+        } else if (operator === "/") {
+          /*
+            FIX 4:
+            Added a division-by-zero check and used an Error object
+            for proper error handling.
+          */
+          if (num2 === 0) {
+            throw new Error("Division by zero is not allowed");
+          }
+          result = num1 / num2;
+        }
+
+        document.getElementById("result").innerText =
+          "Result: " + result;
+
+      } catch (err) {
+        /*
+          FIX 5:
+          Error handling now uses err.message from the Error object
+          instead of throwing plain strings.
+        */
+        document.getElementById("result").innerText =
+          "Error: " + err.message;
+      }
+    }
+  </script>
+</body>
+</html>
